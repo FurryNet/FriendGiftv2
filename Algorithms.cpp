@@ -1,7 +1,9 @@
-#include "Algorithms.h"
 #include <QRandomGenerator>
+#include "Algorithms.h"
+
 
 QRandomGenerator * RNGEngine = QRandomGenerator::system();
+
 // Can be improve but honestly, I'll just keep it shitty LOL
 bool checkLuhn(const std::string& cardNo)
 {
