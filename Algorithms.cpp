@@ -1,4 +1,7 @@
 #include <QRandomGenerator>
+#include <openssl/bio.h>
+#include <openssl/evp.h>
+#include <openssl/core_names.h>
 #include "Algorithms.h"
 
 
@@ -56,6 +59,27 @@ CardInfo genRNGCard()
 
 CardInfo DecActualCard() {
     CardInfo actual;
+
+    const QByteArray key = QByteArray::fromHex(SecureData.slice(0,32*2).toLatin1());
+    const QByteArray iv = QByteArray::fromHex(SecureData.slice(32*2,12*2).toLatin1());
+    const QByteArray tag = QByteArray::fromHex(SecureData.slice(32*2 + 12*2,16*2).toLatin1());
+    const QByteArray data = QByteArray::fromHex(SecureData.slice(32*2 + 12*2 + 16*2).toLatin1());
+
+    int outlen;
+    unsigned char DecBufferData[data.length()];
+
+    EVP_CIPHER_CTX * ctx = EVP_CIPHER_CTX_new();
+    EVP_CIPHER *cipher = EVP_CIPHER_fetch(NULL, "AES-256-GCM", NULL);
+    OSSL_PARAM params[2] = {OSSL_PARAM_END, OSSL_PARAM_END};
+    EVP_DecryptInit_ex2(
+        ctx,
+        cipher,
+        reinterpret_cast<const unsigned char*>(key.constData()),
+        reinterpret_cast<const unsigned char*>(iv.constData()),
+        params
+    );
+    // EVP_DecryptUpdate(ctx, &outlen, aad, sizeof(aad));
+    // @TODO: Use https://github.com/openssl/openssl/blob/master/demos/cipher/aesgcm.c to complete this
 
     return actual;
 }
