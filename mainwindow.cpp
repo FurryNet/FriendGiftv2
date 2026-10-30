@@ -31,12 +31,32 @@ void MainWindow::on_GenNum_clicked()
     if(isValid)
         data = DecActualCard();
 
-    if(isValid && data.cardNum == "0000000000000000")
+    if(isValid && data.cardNum == "0000000000000000") {
         ui->Status->setText("Although you got lucky, the SecureData was tampered with and can no longer ensure the number is still valid. Please redownload and try again.");
+        isValid = false;
+    }
+    ui->ChkNum->setDisabled(false);
 
 
     ui->CardNum->setText(data.cardNum);
     ui->ExpDate->setText(data.expiration);
     ui->CVVNum->setText(data.cvv);
+}
+
+
+void MainWindow::on_ChkNum_clicked()
+{
+    ui->ChkNum->setDisabled(true);
+
+    if(isValid) {
+        ui->Status->setText("Congratulation, the card number is valid! Please redeem your $5 dalla reward.");
+        ui->GenNum->setDisabled(true);
+        return;
+    }
+
+    ui->Status->setText(QString("Sorry, not a valid number, attempt used: %1/3 (software will shutdown after 3rd attempt)").arg(QString::number(++attempts)));
+    if(attempts >= 3)
+        QApplication::quit();
+
 }
 

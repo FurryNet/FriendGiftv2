@@ -20,6 +20,8 @@ public:
 private slots:
     void on_GenNum_clicked();
 
+    void on_ChkNum_clicked();
+
 private:
     Ui::MainWindow *ui;
 };
