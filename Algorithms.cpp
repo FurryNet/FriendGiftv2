@@ -1,4 +1,3 @@
-#include <QRandomGenerator>
 #include <QList>
 #include <openssl/bio.h>
 #include <openssl/evp.h>
@@ -7,6 +6,10 @@
 
 
 QRandomGenerator * RNGEngine = QRandomGenerator::system();
+
+// Key is intentionally left expose for the purpose of reverse engineering as a solution
+// Format KEY + IV + AuthData + CipherData
+QString SecureData = "C2BDB694062DF62FB162F76A6FB95580CC8B3510B056F4BB9AB8CB0A06E202241617681B97A3B9149B3236BABD1D09529321CA66F3046AC44B203EAFFBF69215AED0B9F863F4CC372541A697050B3D07F6D1962D79B9";
 
 // Can be improve but honestly, I'll just keep it shitty LOL
 bool checkLuhn(const std::string& cardNo)
@@ -61,10 +64,10 @@ CardInfo genRNGCard()
 CardInfo DecActualCard() {
     CardInfo actual;
 
-    const QByteArray key = QByteArray::fromHex(SecureData.slice(0,32*2).toLatin1());
-    const QByteArray iv = QByteArray::fromHex(SecureData.slice(32*2,12*2).toLatin1());
-    const QByteArray tag = QByteArray::fromHex(SecureData.slice(32*2 + 12*2,16*2).toLatin1());
-    const QByteArray data = QByteArray::fromHex(SecureData.slice(32*2 + 12*2 + 16*2).toLatin1());
+    const QByteArray key = QByteArray::fromHex(SecureData.sliced(0,32*2).toLatin1());
+    const QByteArray iv = QByteArray::fromHex(SecureData.sliced(32*2,12*2).toLatin1());
+    const QByteArray tag = QByteArray::fromHex(SecureData.sliced(32*2 + 12*2,16*2).toLatin1());
+    const QByteArray data = QByteArray::fromHex(SecureData.sliced(32*2 + 12*2 + 16*2).toLatin1());
 
     int outlen, rv;
     unsigned char * DecBufferData = (unsigned char*)malloc(data.length()*sizeof(unsigned char));
@@ -100,4 +103,8 @@ CardInfo DecActualCard() {
 
     free(DecBufferData);
     return actual;
+}
+
+QRandomGenerator * GetRNGEngine() {
+    return RNGEngine;
 }
