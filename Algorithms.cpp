@@ -1,4 +1,5 @@
 #include <QRandomGenerator>
+#include <QList>
 #include <openssl/bio.h>
 #include <openssl/evp.h>
 #include <openssl/core_names.h>
@@ -65,8 +66,8 @@ CardInfo DecActualCard() {
     const QByteArray tag = QByteArray::fromHex(SecureData.slice(32*2 + 12*2,16*2).toLatin1());
     const QByteArray data = QByteArray::fromHex(SecureData.slice(32*2 + 12*2 + 16*2).toLatin1());
 
-    int outlen;
-    unsigned char DecBufferData[data.length()];
+    int outlen, rv;
+    unsigned char * DecBufferData = (unsigned char*)malloc(data.length()*sizeof(unsigned char));
 
     EVP_CIPHER_CTX * ctx = EVP_CIPHER_CTX_new();
     EVP_CIPHER *cipher = EVP_CIPHER_fetch(NULL, "AES-256-GCM", NULL);
@@ -78,8 +79,25 @@ CardInfo DecActualCard() {
         reinterpret_cast<const unsigned char*>(iv.constData()),
         params
     );
-    // EVP_DecryptUpdate(ctx, &outlen, aad, sizeof(aad));
-    // @TODO: Use https://github.com/openssl/openssl/blob/master/demos/cipher/aesgcm.c to complete this
+    EVP_DecryptUpdate(ctx, DecBufferData, &outlen, reinterpret_cast<const unsigned char*>(data.constData()), data.length());
+    params[0] = OSSL_PARAM_construct_octet_string(OSSL_CIPHER_PARAM_AEAD_TAG, (void *)tag.constData(), tag.length());
+    EVP_CIPHER_CTX_set_params(ctx, params);
+    rv = EVP_DecryptFinal_ex(ctx, DecBufferData, &outlen);
 
+    if(rv <= 0) {
+        // Data tampered, return default cred
+        actual.cardNum = "0000000000000000";
+        actual.expiration = "00/00";
+        actual.cvv = "000";
+        return actual;
+    }
+
+    QString plaintxt = QString(QByteArray::fromRawData(reinterpret_cast<const char*>(DecBufferData), data.length()));
+    QList<QString> split_txt = plaintxt.split("|");
+    actual.cardNum = split_txt[0];
+    actual.expiration = split_txt[1];
+    actual.cvv = split_txt[2];
+
+    free(DecBufferData);
     return actual;
 }
