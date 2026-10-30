@@ -56,7 +56,10 @@ CardInfo genRNGCard()
     sample.expiration = month + "/" + year;
 
     // CVV
-    sample.cvv = QString::number(RNGEngine->bounded(0,999));
+    quint64 intcvv = RNGEngine->bounded(0,999);
+    sample.cvv = QString::number(intcvv);
+    if(intcvv%100 == intcvv)
+        sample.cvv = "0" + sample.cvv;
 
     return sample;
 }

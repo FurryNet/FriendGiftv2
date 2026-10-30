@@ -20,7 +20,7 @@ bool isValid = false;
 
 void MainWindow::on_GenNum_clicked()
 {
-    CardInfo data = DecActualCard();
+    CardInfo data = genRNGCard();
     ui->CardNum->setText(data.cardNum);
     ui->ExpDate->setText(data.expiration);
     ui->CVVNum->setText(data.cvv);

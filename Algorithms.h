@@ -19,5 +19,5 @@ struct CardInfo {
 // QString Key = "C2BDB694062DF62FB162F76A6FB95580CC8B3510B056F4BB9AB8CB0A06E20224";
 
 QRandomGenerator * GetRNGEngine();
-CardInfo genRNGCardData();
+CardInfo genRNGCard();
 CardInfo DecActualCard();
