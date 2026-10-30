@@ -40,8 +40,8 @@ CardInfo genRNGCard()
     CardInfo sample;
 
     // Card Number
-    QString cardType = QString::number(RNGEngine->bounded(4,5)); // Master or Visa LOL
-    QString ActualNum = QString::number(RNGEngine->bounded(10000000000000,99999999999999)); // All possible combo
+    QString cardType = QString::number(RNGEngine->bounded(4,5 + 1)); // Master or Visa LOL
+    QString ActualNum = QString::number(RNGEngine->bounded(10000000000000,99999999999999 + 1)); // All possible combo
     for(int CheckSum=0; CheckSum < 10; CheckSum++) {
         QString strNum = cardType + ActualNum + QString::number(CheckSum);
         if(checkLuhn(strNum.toStdString())) {
@@ -51,12 +51,12 @@ CardInfo genRNGCard()
     }
 
     // Expiration
-    QString month = QString::number(RNGEngine->bounded(1,12));
-    QString year = QString::number(RNGEngine->bounded(27, 36));
+    QString month = QString::number(RNGEngine->bounded(1,12 + 1));
+    QString year = QString::number(RNGEngine->bounded(27, 36 + 1));
     sample.expiration = month + "/" + year;
 
     // CVV
-    quint64 intcvv = RNGEngine->bounded(0,999);
+    quint64 intcvv = RNGEngine->bounded(0,999 + 1);
     sample.cvv = QString::number(intcvv);
     if(intcvv%100 == intcvv)
         sample.cvv = "0" + sample.cvv;
