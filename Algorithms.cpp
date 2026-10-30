@@ -49,7 +49,7 @@ CardInfo genRNGCard()
 
     // Expiration
     QString month = QString::number(RNGEngine->bounded(1,12));
-    QString year = QString::number(RNGEngine->bounded(2027, 2036));
+    QString year = QString::number(RNGEngine->bounded(27, 36));
     sample.expiration = month + "/" + year;
 
     // CVV
