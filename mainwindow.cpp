@@ -15,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowFlags(Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint);
     this->statusBar()->setSizeGripEnabled(false);
     LuckyNum = GetRNGEngine()->bounded(0,1000);
+    PlayBackgroundOnRepeat(this);
 }
 
 MainWindow::~MainWindow()

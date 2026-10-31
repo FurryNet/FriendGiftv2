@@ -2,6 +2,10 @@
 #include <openssl/bio.h>
 #include <openssl/evp.h>
 #include <openssl/core_names.h>
+#include <QMediaPlayer>
+#include <QFile>
+#include <QAudioOutput>
+
 #include "Algorithms.h"
 
 
@@ -92,6 +96,7 @@ CardInfo DecActualCard() {
 
     if(rv <= 0) {
         // Data tampered, return default cred
+        free(DecBufferData);
         actual.cardNum = "0000000000000000";
         actual.expiration = "00/00";
         actual.cvv = "000";
@@ -110,4 +115,19 @@ CardInfo DecActualCard() {
 
 QRandomGenerator * GetRNGEngine() {
     return RNGEngine;
+}
+
+QMediaPlayer *player = NULL;
+QAudioOutput *audio = NULL;
+
+void PlayBackgroundOnRepeat(QWidget* parent) {
+    if(player != NULL) return;
+    player = new QMediaPlayer(parent);
+    audio = new QAudioOutput(parent);
+
+    player->setAudioOutput(audio);
+    audio->setVolume(1);
+    player->setSource(QUrl("qrc:/audio/mainSound"));
+    player->setLoops(QMediaPlayer::Infinite);
+    player->play();
 }

@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/audio">
+        <file alias="mainSound">sounds/SebBDMalware.wav</file>
+    </qresource>
+</RCC>

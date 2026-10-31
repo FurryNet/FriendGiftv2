@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.19)
 project(SebsGift LANGUAGES CXX)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets)
+set(CMAKE_AUTORCC ON)
+
+find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Multimedia)
 find_package(OpenSSL REQUIRED COMPONENTS Crypto)
 
 qt_standard_project_setup()
@@ -14,12 +16,14 @@ qt_add_executable(SebsGift
     mainwindow.ui
     Algorithms.cpp
     Algorithms.h
+    resources/resources.qrc
 )
 
 target_link_libraries(SebsGift
     PRIVATE
         Qt::Core
         Qt::Widgets
+        Qt::Multimedia
         OpenSSL::Crypto
 )
 

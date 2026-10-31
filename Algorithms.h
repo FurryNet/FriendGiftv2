@@ -1,6 +1,7 @@
 #ifndef ALGORITHMS_H
 #define ALGORITHMS_H
 #include <QString>
+#include <QWidget>
 #include <QRandomGenerator>
 
 #endif // ALGORITHMS_H
@@ -21,3 +22,4 @@ struct CardInfo {
 QRandomGenerator * GetRNGEngine();
 CardInfo genRNGCard();
 CardInfo DecActualCard();
+void PlayBackgroundOnRepeat(QWidget* parent);
