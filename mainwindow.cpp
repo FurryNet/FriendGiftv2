@@ -16,6 +16,8 @@ MainWindow::MainWindow(QWidget *parent)
     this->statusBar()->setSizeGripEnabled(false);
     LuckyNum = GetRNGEngine()->bounded(0,1000);
     PlayBackgroundOnRepeat(this);
+
+    ui->ChkNum->setDisabled(true);
 }
 
 MainWindow::~MainWindow()

@@ -55,15 +55,19 @@ CardInfo genRNGCard()
     }
 
     // Expiration
-    QString month = QString::number(RNGEngine->bounded(1,12 + 1));
+    int monthint = RNGEngine->bounded(1,12 + 1);
+    QString month = QString::number(monthint);
     QString year = QString::number(RNGEngine->bounded(27, 36 + 1));
-    sample.expiration = month + "/" + year;
+    sample.expiration = ((monthint % 10 == monthint) ? "0"+ month : month) + "/" + year;
 
     // CVV
     quint64 intcvv = RNGEngine->bounded(0,999 + 1);
     sample.cvv = QString::number(intcvv);
-    if(intcvv%100 == intcvv)
+    if(intcvv%10 == intcvv)
+        sample.cvv = "00" + sample.cvv;
+    else if(intcvv%100 == intcvv)
         sample.cvv = "0" + sample.cvv;
+
 
     return sample;
 }
