@@ -50,7 +50,7 @@ void MainWindow::on_ChkNum_clicked()
     ui->ChkNum->setDisabled(true);
 
     if(isValid) {
-        ui->Status->setText("Congratulation, the card number is valid! Please redeem your $5 dalla reward.");
+        ui->Status->setText("Congratulation, the card number is valid! Please redeem your $10 dalla reward.");
         ui->GenNum->setDisabled(true);
         return;
     }
